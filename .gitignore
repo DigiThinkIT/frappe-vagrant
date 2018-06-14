@@ -1,0 +1,4 @@
+.DS_Store
+apps/
+apps.old/
+.vagrant
