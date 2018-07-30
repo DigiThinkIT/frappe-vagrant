@@ -27,6 +27,14 @@ git clone https://github.com/frappe/bench .bench
 sudo pip install ./.bench
 bench init frappe-bench
 
+## Create site and set it as default
+cd /home/vagrant/frappe-bench
+bench new-site site1.local --mariadb-root-password frappe --admin-password frappe
+bench use site1.local
+
+# Enable developer mode
+bench set-config "developer_mode" 1
+
 # Move apps to shared Vagrant folder
 mv /home/vagrant/frappe-bench/apps /vagrant/
 mkdir -p /home/vagrant/frappe-bench/apps
