@@ -2,3 +2,4 @@
 apps/
 apps.old/
 .vagrant
+*~

@@ -39,5 +39,25 @@ bench set-config "developer_mode" 1
 mv /home/vagrant/frappe-bench/apps /vagrant/
 mkdir -p /home/vagrant/frappe-bench/apps
 
-# Auto-mount shared folder to into bench
-echo -e "\nsudo mount --bind /vagrant/apps /home/vagrant/frappe-bench/apps\n" >> ~/.profile
+# Fixes Redis warning about memory and cpu latency.
+echo 'never' | sudo tee --append /sys/kernel/mm/transparent_hugepage/enabled
+
+# Fixes redis warning about background saves
+echo 'vm.overcommit_memory = 1' | sudo tee --append /etc/sysctl.conf
+# set without restart
+sudo sysctl vm.overcommit_memory=1
+
+# Fixes redis issue with low backlog reservation
+echo 'net.core.somaxconn = 511' | sudo tee --append /etc/sysctl.conf
+# set without restart
+sudo sysctl net.core.somaxconn=511
+
+
+# Auto-mount shared folder to into bench. Make sure we only mount once.
+echo "
+if mount | grep /vagrant/apps > /dev/null; then
+	echo '/vagrant/apps already mounted.'
+else
+	sudo mount --bind /vagrant/apps /home/vagrant/frappe-bench/apps
+fi
+" >> ~/.profile
